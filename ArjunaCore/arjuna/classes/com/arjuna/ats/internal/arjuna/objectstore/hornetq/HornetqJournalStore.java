@@ -136,6 +136,7 @@ public class HornetqJournalStore
         journal = new JournalImpl(envBean.getFileSize(), envBean.getMinFiles(), envBean.getPoolSize(), envBean.getCompactMinFiles(),
                         envBean.getCompactPercentage(), sequentialFileFactory, envBean.getFilePrefix(),
                         envBean.getFileExtension(), envBean.getMaxIO());
+        journal.replaceableRecord(RECORD_TYPE);
     }
 
 
@@ -185,7 +186,7 @@ public class HornetqJournalStore
             outputBuffer.packBytes(txData.buffer());
             byte[] data = outputBuffer.buffer();
 
-            RecordInfo record = new RecordInfo(getId(uid, typeName), RECORD_TYPE, data, false, (short)0);
+            RecordInfo record = new RecordInfo(getId(uid, typeName), RECORD_TYPE, data, false, true, (short)0);
             previousRecord = getContentForType(typeName).putIfAbsent(uid, record);
 
             if(previousRecord != null) {
